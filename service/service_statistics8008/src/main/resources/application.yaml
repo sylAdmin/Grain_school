@@ -1,0 +1,9 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 47.113.180.127:8848  #nacos服务地址
+#feign:  #开启feign的熔断器功能
+#  hystrix:
+#    enabled: true
+
