@@ -47,7 +47,7 @@ public class EduTeacherController {
     @ApiOperation(value = "逻辑删除讲师")
     @DeleteMapping("delete/{id}")
     public R removeTeacher(@ApiParam(name = "id",value = "讲师ID",required = true)
-                                     @PathVariable("id") Long id){
+                                     @PathVariable("id") String id){
         boolean flag = eduTeacherService.removeById(id);
         if(flag){
             return R.ok();
@@ -108,7 +108,8 @@ public class EduTeacherController {
     //6、根据讲师id进行查询
     @ApiOperation(value = "根据讲师id进行查询")
     @GetMapping("getTeacher/{id}")
-    public R getTeacher(@PathVariable("id") Long id){
+    public R getTeacher(@PathVariable("id") String
+                                    id){
         EduTeacher eduTeacher = eduTeacherService.getById(id);
         return R.ok().data("teacher",eduTeacher);
     }

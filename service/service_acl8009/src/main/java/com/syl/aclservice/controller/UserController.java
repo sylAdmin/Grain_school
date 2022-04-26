@@ -47,7 +47,7 @@ public class UserController {
             @PathVariable Long limit,
 
             @ApiParam(name = "courseQuery", value = "查询对象", required = false)
-             User userQueryVo) {
+                    User userQueryVo) {
         Page<User> pageParam = new Page<>(page, limit);
         QueryWrapper<User> wrapper = new QueryWrapper<>();
         if(!StringUtils.isEmpty(userQueryVo.getUsername())) {
@@ -66,9 +66,18 @@ public class UserController {
         return R.ok();
     }
 
+    @ApiOperation(value = "数据回显")
+    @GetMapping("get/{id}")
+    public R get(@PathVariable String id) {
+        User user = userService.getById(id);
+        return R.ok().data("item",user);
+    }
+
     @ApiOperation(value = "修改管理用户")
     @PutMapping("update")
     public R updateById(@RequestBody User user) {
+        String md5Password = MD5.encrypt(user.getPassword());
+        user.setPassword(md5Password);
         userService.updateById(user);
         return R.ok();
     }

@@ -49,7 +49,7 @@ public class User implements Serializable {
     @ApiModelProperty(value = "逻辑删除 1（true）已删除， 0（false）未删除")
     @TableField(fill = FieldFill.INSERT)
     @TableLogic
-    private Boolean isDeleted;
+    private Integer isDeleted;
 
     @ApiModelProperty(value = "创建时间")
     @TableField(fill = FieldFill.INSERT)

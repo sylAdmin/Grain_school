@@ -1,11 +1,11 @@
 package com.syl.serurity.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.syl.commonutils.R;
 import com.syl.commonutils.ResponseUtil;
 import com.syl.serurity.entity.SecurityUser;
 import com.syl.serurity.entity.User;
 import com.syl.serurity.security.TokenManager;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * <p>认证过滤
+ * <p>
  * 登录过滤器，继承UsernamePasswordAuthenticationFilter，对用户名密码进行登录校验
  * </p>
  *
@@ -43,9 +43,6 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/admin/acl/login","POST"));
     }
 
-    /**
-     * 得到登录输入的用户名和密码进行认证
-     */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res)
             throws AuthenticationException {
@@ -60,7 +57,13 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     /**
-     * 登录成功 执行的方法
+     * 登录成功
+     * @param req
+     * @param res
+     * @param chain
+     * @param auth
+     * @throws IOException
+     * @throws ServletException
      */
     @Override
     protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain,
@@ -73,7 +76,12 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
     }
 
     /**
-     * 登录失败 执行的方法
+     * 登录失败
+     * @param request
+     * @param response
+     * @param e
+     * @throws IOException
+     * @throws ServletException
      */
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,

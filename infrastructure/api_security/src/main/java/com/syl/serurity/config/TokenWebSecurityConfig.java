@@ -30,9 +30,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class TokenWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private UserDetailsService userDetailsService;  //自定义查询数据库
-    private TokenManager tokenManager; //生成token工具
-    private DefaultPasswordEncoder defaultPasswordEncoder;  //处理密码的工具类
+    private UserDetailsService userDetailsService;
+    private TokenManager tokenManager;
+    private DefaultPasswordEncoder defaultPasswordEncoder;
     private RedisTemplate redisTemplate;
 
     @Autowired
@@ -56,7 +56,6 @@ public class TokenWebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().csrf().disable()
                 .authorizeRequests()
                 .anyRequest().authenticated()
-                //设置退出地址
                 .and().logout().logoutUrl("/admin/acl/index/logout")
                 .addLogoutHandler(new TokenLogoutHandler(tokenManager,redisTemplate)).and()
                 .addFilter(new TokenLoginFilter(authenticationManager(), tokenManager, redisTemplate))
@@ -82,9 +81,6 @@ public class TokenWebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers("/api/**",
                 "/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**"
-                ,"/admin/**"
                );
-//        web.ignoring().antMatchers("/*/**"
- //        );
     }
 }

@@ -213,34 +213,45 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         wrapper.orderByDesc("id");
         List<Permission> permissionList = baseMapper.selectList(wrapper);
         //2 把查询所有菜单list集合按照要求进行封装
-        List<Permission> resultList = buildPermission(permissionList);
+        List<Permission> resultList = bulidPermission(permissionList);
         return resultList;
     }
 
     //把返回所有菜单list集合进行封装的方法
-    public static List<Permission> buildPermission(List<Permission> permissionList) {
-        ArrayList<Permission> finalNode = new ArrayList<>();
-        //递归先从根节点（顶级菜单）开始，找出pid为0的数据，当作根节点，进行递归查讯
-        for (Permission permission : permissionList) {
-            if("0".equals(permission.getPid())){
-                //设置根节点的等级为1级
-                permission.setLevel(1);
-                finalNode.add(selectChildren(permission,permissionList));
+    public static List<Permission> bulidPermission(List<Permission> permissionList) {
+
+        //创建list集合，用于数据最终封装
+        List<Permission> finalNode = new ArrayList<>();
+        //把所有菜单list集合遍历，得到顶层菜单 pid=0菜单，设置level是1
+        for(Permission permissionNode : permissionList) {
+            //得到顶层菜单 pid=0菜单
+            if("0".equals(permissionNode.getPid())) {
+                //设置顶层菜单的level是1
+                permissionNode.setLevel(1);
+                //根据顶层菜单，向里面进行查询子菜单，封装到finalNode里面
+                finalNode.add(selectChildren(permissionNode,permissionList));
             }
         }
         return finalNode;
     }
 
     private static Permission selectChildren(Permission permissionNode, List<Permission> permissionList) {
+        //1 因为向一层菜单里面放二层菜单，二层里面还要放三层，把对象初始化
         permissionNode.setChildren(new ArrayList<Permission>());
-        //遍历所有list集合，进行判断比较，比较一级id和二级pid值是否相同
-        for (Permission permission : permissionList) {
-            if (permissionNode.getId().equals(permission.getPid())) {
-                //把父菜单的等级 +1
-                permission.setLevel(permissionNode.getLevel() + 1);  //表示是二级子菜单
 
-                //把查询出来的子菜单放到父菜单里
-                permissionNode.getChildren().add(selectChildren(permission,permissionList));
+        //2 遍历所有菜单list集合，进行判断比较，比较id和pid值是否相同
+        for(Permission it : permissionList) {
+            //判断 id和pid值是否相同
+            if(permissionNode.getId().equals(it.getPid())) {
+                //把父菜单的level值+1
+                int level = permissionNode.getLevel()+1;
+                it.setLevel(level);
+                //如果children为空，进行初始化操作
+                if(permissionNode.getChildren() == null) {
+                    permissionNode.setChildren(new ArrayList<Permission>());
+                }
+                //把查询出来的子菜单放到父菜单里面
+                permissionNode.getChildren().add(selectChildren(it,permissionList));
             }
         }
         return permissionNode;
