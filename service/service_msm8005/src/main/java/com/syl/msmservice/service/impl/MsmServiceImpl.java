@@ -6,6 +6,7 @@ import com.aliyun.dysmsapi20170525.models.SendSmsResponseBody;
 import com.aliyun.teaopenapi.models.Config;
 import com.syl.commonutils.R;
 import com.syl.msmservice.client.UcenterClient;
+import com.syl.msmservice.properties.PhoneConfigProperties;
 import com.syl.msmservice.service.MsmService;
 import com.syl.msmservice.utils.RandomUtil;
 import com.syl.servicebase.exception.GuLiException;
@@ -21,6 +22,9 @@ public class MsmServiceImpl implements MsmService {
     @Autowired
     private UcenterClient ucenterClient;
 
+    @Autowired
+    private PhoneConfigProperties phoneConfigProperties;
+
     /**
      * 发送验证码
      */
@@ -34,7 +38,7 @@ public class MsmServiceImpl implements MsmService {
         } //没有注册执行以下逻辑
 
         code = RandomUtil.getFourBitRandom();  //4位验证码
-        com.aliyun.dysmsapi20170525.Client client = createClient("LTAI5tNBkkTAsFNVuxPxmBbQ", "AyI1XK80MnGjIBdKh4ByvM9s9LF321");
+        com.aliyun.dysmsapi20170525.Client client = createClient(phoneConfigProperties.getKeyId(), phoneConfigProperties.getKeySecret());
         SendSmsRequest sendSmsRequest = new SendSmsRequest()
                 .setSignName("阿里云短信测试")
                 .setTemplateCode("SMS_154950909")
